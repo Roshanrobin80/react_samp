@@ -1,38 +1,91 @@
-# Context class to store shared state
-class Context:
-    def _init_(self):
-        self.state = {"theme": "light", "user": "Guest"}
+import { useState, createContext, useContext } from "react";
+import ReactDOM from "react-dom/client";
 
-    def set_state(self, key, value):
-        if key in self.state:
-            self.state[key] = value
-        else:
-            print(f"Key {key} not found in state!")
+const UserContext = createContext();
 
-    def get_state(self):
-        return self.state
+function Component1() {
+  const [user, setUser] = useState("Roshan Robin");
+
+  return (
+    <UserContext.Provider value={user}>
+      <h1>{`Hello ${user}!`}</h1>
+      <Component2 />
+    </UserContext.Provider>
+  );
+}
+
+function Component2() {
+  return (
+    <>
+      <h1>Component 2</h1>
+      <Component3 />
+    </>
+  );
+}
+
+function Component3() {
+  return (
+    <>
+      <h1>Component 3</h1>
+      <Component4 />
+    </>
+  );
+}
+
+function Component4() {
+  return (
+    <>
+      <h1>Component 4</h1>
+      <Component5 />
+    </>
+  );
+}
+
+function Component5() {
+  const user = useContext(UserContext);
+
+  return (
+    <>
+      <h1>Component 5</h1>
+      <h2>{`Hello ${user} again!`}</h2>
+    </>
+  );
+}
+export default Component1;
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Component1 />);
 
 
-# Function to simulate a component that uses the context
-def ComponentA(context):
-    theme = context.get_state().get("theme")
-    user = context.get_state().get("user")
-    print(f"ComponentA: Theme is {theme}, User is {user}")
-    # Modify the context
-    context.set_state("theme", "dark")
+// import { useState, useEffect, useRef } from "react";
+// import ReactDOM from "react-dom/client";
 
+// function App() {
+//   const [inputValue, setInputValue] = useState("");
+//   const previousInputValue = useRef("");
 
-# Another function simulating another component that uses the context
-def ComponentB(context):
-    theme = context.get_state().get("theme")
-    user = context.get_state().get("user")
-    print(f"ComponentB: Theme is {theme}, User is {user}")
+//   useEffect(() => {
+//     previousInputValue.current = inputValue;
+//   }, [inputValue]);
 
+//   return (
+//     <>
+//       <input
+//         type="text"
+//         value={inputValue}
+//         onChange={(e) => setInputValue(e.target.value)}
+//       />
+//       <h2>Current Value: {inputValue}</h2>
+//       <h2>Previous Value: {previousInputValue.current}</h2>
+//     </>
+//   );
+// }
+// export default App;
 
-# Main code
-context = Context()
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(<App />);
 
-print("Initial state:")
-ComponentA(context)  # ComponentA can modify the context
-print("\nAfter ComponentA modifies the context:")
-ComponentB(context)  # ComponentB uses the modified context
+// /*
+// Start typing in the input field and you will
+// see the current- and previous value.
+// */
